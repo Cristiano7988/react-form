@@ -1,26 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { TextField, Switch, Button, FormControlLabel } from '@material-ui/core';
+import ValidacoesCadastro from '../../contexts/ValidacoesCadastro';
 
 // Function Component
-function DadosPessoais({aoEnviar, validarCpf}) {
+function DadosPessoais({aoEnviar}) {
     const [nome, setNome] = useState(""); // Hook de useState - retorna um array
     const [sobrenome, setSobrenome] = useState("");
     const [cpf, setCpf] = useState("");
     const [promocoes, setPromocoes] = useState(true);
     const [novidades, setNovidades] = useState(true);
-    const [erros, setErros] = useState({cpf:{valido:true, texto:""}});
+    const [erros, setErros] = useState({cpf:{valido:true, texto:""}, nome:{valido: true, texto:""}});
+
+    const validacoes = useContext(ValidacoesCadastro);
+
+    function validarCampo(event) {
+        const {name, value} =  event.target;
+        const novoEstado = {...erros};
+        novoEstado[name] = validacoes[name](value);
+        setErros(novoEstado)
+    }
+
+    function possoEnviar() {
+        for(let campos in erros) {
+            if(!campos[erros].valido) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     return (
         // Formulário Controlado - Inputs controlados pelo ciclo de vida do React
         <form onSubmit={(e)=>{
             e.preventDefault();
-            aoEnviar({nome, sobrenome, cpf, promocoes, novidades});
+            if(possoEnviar()) {
+                aoEnviar({nome, sobrenome, cpf, promocoes, novidades});
+            }
         }}>
             <TextField
                 value={nome}
                 onChange={(e)=> {
                     setNome(e.target.value);
                 }}
+                onBlur={validarCampo}
+                error={!erros.nome.valido}
+                helperText={erros.nome.texto}
                 margin="normal"
                 variant="outlined"
                 fullWidth
@@ -45,15 +69,13 @@ function DadosPessoais({aoEnviar, validarCpf}) {
                 onChange={(e)=> {
                     setCpf(e.target.value);
                 }}
-                onBlur={(e)=>{
-                    const ehValido = validarCpf(cpf);
-                    setErros({cpf: ehValido})
-                }}
+                onBlur={validarCampo}
                 error={!erros.cpf.valido}
                 helperText={erros.cpf.texto}
                 margin="normal"
                 variant="outlined"
                 fullWidth
+                name="cpf"
                 id="CPF"
                 label="CPF"
             />
@@ -91,7 +113,7 @@ function DadosPessoais({aoEnviar, validarCpf}) {
                 variant="contained"
                 color="primary"
             >
-                Cadastrar
+                Próximo
             </Button>
         </form>
     );

@@ -5,7 +5,7 @@ import DadosPessoais from './DadosPessoais';
 import DadosUsuario from './DadosUsuario';
 
 // Function Component
-function FormularioCadastro({aoEnviar, validarCpf}) {
+function FormularioCadastro({aoEnviar}) {
     const [etapaAtual, setEtapaAtual] = useState(0);
     const [dadosColetados, setDadosColetados] = useState({});
     // useEffect substitui componentDid... em function component
@@ -17,7 +17,7 @@ function FormularioCadastro({aoEnviar, validarCpf}) {
 
     const formularios = [
         <DadosUsuario aoEnviar={coletaDados} />,
-        <DadosPessoais aoEnviar={coletaDados} validarCpf={validarCpf} />,
+        <DadosPessoais aoEnviar={coletaDados} />,
         <DadosEntrega aoEnviar={coletaDados} />,
         <Typography align="center" variant="h5" component="h2">Obrigado pelo cadastro</Typography>
     ];
