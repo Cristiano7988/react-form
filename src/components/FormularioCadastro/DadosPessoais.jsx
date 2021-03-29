@@ -23,7 +23,9 @@ function DadosPessoais({aoEnviar, validarCpf}) {
                 }}
                 margin="normal"
                 variant="outlined"
-                fullWidth id="nome"
+                fullWidth
+                required
+                id="nome"
                 label="Nome"
                 />
             <TextField
@@ -34,6 +36,7 @@ function DadosPessoais({aoEnviar, validarCpf}) {
                 margin="normal"
                 variant="outlined"
                 fullWidth
+                required
                 id="sobrenome"
                 label="Sobrenome"
             />

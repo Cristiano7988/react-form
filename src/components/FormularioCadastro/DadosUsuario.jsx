@@ -1,20 +1,38 @@
 import { Button, TextField } from '@material-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
 
-function DadosUsuario() {
+function DadosUsuario({aoEnviar}) {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
     return (
-        <form>
+        <form onSubmit={(e)=>{
+            e.preventDefault();
+            aoEnviar({email, password});
+        }}>
             <TextField
+                value={email}
+                onChange={(e)=>{
+                    setEmail(e.target.value);
+                }}
                 variant="outlined"
                 margin="normal"
-                fullWidth id="email"
+                fullWidth
+                required
+                id="email"
                 label="email"
                 type="email"
-            />
+                />
             <TextField
+                value={password}
+                onChange={(e)=>{
+                    setPassword(e.target.value);
+                }}
                 variant="outlined"
                 margin="normal"
-                fullWidth id="senha"
+                fullWidth
+                required
+                id="senha"
                 label="senha"
                 type="password"
             />
