@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { TextField, Switch, Button, FormControlLabel } from '@material-ui/core';
 import ValidacoesCadastro from '../../contexts/ValidacoesCadastro';
+import useErros from '../../hooks/useErros';
 
 // Function Component
 function DadosPessoais({aoEnviar}) {
@@ -9,25 +10,10 @@ function DadosPessoais({aoEnviar}) {
     const [cpf, setCpf] = useState("");
     const [promocoes, setPromocoes] = useState(true);
     const [novidades, setNovidades] = useState(true);
-    const [erros, setErros] = useState({cpf:{valido:true, texto:""}, nome:{valido: true, texto:""}});
 
     const validacoes = useContext(ValidacoesCadastro);
 
-    function validarCampo(event) {
-        const {name, value} =  event.target;
-        const novoEstado = {...erros};
-        novoEstado[name] = validacoes[name](value);
-        setErros(novoEstado)
-    }
-
-    function possoEnviar() {
-        for(let campos in erros) {
-            if(!campos[erros].valido) {
-                return false;
-            }
-        }
-        return true;
-    }
+    const [erros, validarCampo, possoEnviar] = useErros(validacoes);
 
     return (
         // Formulário Controlado - Inputs controlados pelo ciclo de vida do React
@@ -49,6 +35,7 @@ function DadosPessoais({aoEnviar}) {
                 variant="outlined"
                 fullWidth
                 required
+                name="nome"
                 id="nome"
                 label="Nome"
                 />
@@ -61,6 +48,7 @@ function DadosPessoais({aoEnviar}) {
                 variant="outlined"
                 fullWidth
                 required
+                name="sobrenome"
                 id="sobrenome"
                 label="Sobrenome"
             />
@@ -87,7 +75,6 @@ function DadosPessoais({aoEnviar}) {
                         onChange={(e)=>{
                             setPromocoes(e.target.checked);
                         }}
-                        name="promoções"
                         checked={promocoes}
                         color="primary"
                     />
@@ -102,7 +89,6 @@ function DadosPessoais({aoEnviar}) {
                             setNovidades(e.target.checked);
                         }}
                         checked={novidades}
-                        name="novidades"
                         color="primary"
                     />
                 }
